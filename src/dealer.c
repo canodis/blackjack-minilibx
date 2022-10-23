@@ -10,15 +10,18 @@ int	dealer_first(t_game *game)
 		card_sum += 10;
 		game->dealer_is_a = true;
 	}
+	put_card_window(game, card->card_img->addr, dcardx ,dcardy);
+	dcardx += 122;
 	card = select_card(game);
 	card_sum += push_card(&game->dcards, card);
+	
 	if (card->name == 'A' && !game->dealer_is_a)
 	{
 		card_sum += 10;
 		game->dealer_is_a = true;
 	}
-	printf("\033[0;34mDealer's cards : \033[0;37m\n");
-	// print_cards(game->dcards, true);
+	put_card_window(game, card->card_img->addr, dcardx ,dcardy);
+	dcardx += 122;
 	return (card_sum);
 }
 

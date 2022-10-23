@@ -31,6 +31,7 @@ t_cards	*card_dup(t_cards *card)
 	t_cards	*new = malloc(sizeof(t_cards));
 	new->name = card->name;
 	new->value = card->value;
+	new->card_img = card->card_img;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

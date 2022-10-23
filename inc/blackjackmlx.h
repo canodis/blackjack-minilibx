@@ -17,19 +17,29 @@
 extern int win;
 extern int lose;
 
-typedef struct s_cards
-{
-	int				value;
-	char			name;
-	struct s_cards	*next;
-	struct s_cards	*prev;
-}	t_cards;
+extern int cardw;
+extern int cardh;
+
+extern int	dcardx;
+extern int	dcardy;
+
+extern int	pcardx;
+extern int	pcardy;
 
 typedef struct s_info
 {
 	void	*img;
 	int		*addr;
 }	t_info;
+
+typedef struct s_cards
+{
+	int				value;
+	char			name;
+	t_info			*card_img;
+	struct s_cards	*next;
+	struct s_cards	*prev;
+}	t_cards;
 
 typedef struct s_buttons
 {
@@ -40,7 +50,19 @@ typedef struct s_buttons
 
 typedef struct s_cardimages
 {
-	t_info	a;
+	t_info	_a;
+	t_info	_2;
+	t_info	_3;
+	t_info	_4;
+	t_info	_5;
+	t_info	_6;
+	t_info	_7;
+	t_info	_8;
+	t_info	_9;
+	t_info	_10;
+	t_info	_q;
+	t_info	_j;
+	t_info	_k;
 }	t_card_images;
 
 
@@ -59,6 +81,8 @@ typedef struct s_blackjack
 	int				mouse_y;
 	int				mouse_e;
 	int				game_event;
+	int				dealer_sum;
+	int				player_sum;
 	t_buttons		buttons;
 	t_card_images	c_image;
 }	t_game;
@@ -75,10 +99,13 @@ int		player_takes(t_game *game, int player_sum, int dealer_sum, bool *is_playing
 void	dealers_turn(t_game *game, int dealer_sum, int player_sum);
 void	free_cards(t_cards **cards);
 int		update(t_game *game);
-void	init_cards(t_cards	**all_cards);
+void	init_cards(t_cards	**all_cards, t_game *game);
 int		dealer_first(t_game *game);
 int		player_first(t_game *game);
 void	ft_lstadd_back(t_cards **lst, t_cards *new);
 void	free_all(t_game *game);
+void	button_bar(t_game *game);
+void	put_card_window(t_game *game, int *img, int x, int y);
+bool	check_input(t_game *game);
 
 #endif
