@@ -5,6 +5,7 @@ void	button_bar(t_game *game)
 	int	imgx = 0;
 	int	imgy;
 	int	image_width = 290;
+
 	// take button
 	for (int x = 50; x < 340; x++)
 	{

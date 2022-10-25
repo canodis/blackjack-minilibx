@@ -14,9 +14,6 @@
 # define SCREENW 1080
 # define SCREENH 860
 
-extern int win;
-extern int lose;
-
 extern int cardw;
 extern int cardh;
 
@@ -63,7 +60,20 @@ typedef struct s_cardimages
 	t_info	_q;
 	t_info	_j;
 	t_info	_k;
+	t_info	_back;
 }	t_card_images;
+
+typedef struct s_stats
+{
+	int	dealer_sum;
+	int	player_sum;
+	int	win;
+	int	lose;
+	int	dcardx;
+	int	dcardy;
+	int	pcardx;
+	int	pcardy;
+}	t_stats;
 
 
 typedef struct s_blackjack
@@ -80,11 +90,14 @@ typedef struct s_blackjack
 	int				mouse_x;
 	int				mouse_y;
 	int				mouse_e;
-	int				game_event;
 	int				dealer_sum;
 	int				player_sum;
+	bool			b_dealerturn;
+	bool			onetime;
+	bool			is_playing;
 	t_buttons		buttons;
 	t_card_images	c_image;
+	t_stats			stats;
 }	t_game;
 
 void	init_all(t_game *game);
@@ -93,10 +106,10 @@ bool	charcmp(char a, char b);
 t_cards	*select_card(t_game *game);
 void	delete_card(t_cards **lst, t_cards *card);
 int		push_card(t_cards **lst, t_cards *new);
-void	dealer_win(t_game *game, int player_sum, int dealer_sum);
-void	player_win(t_game *game, int player_sum, int dealer_sum);
-int		player_takes(t_game *game, int player_sum, int dealer_sum, bool *is_playing);
-void	dealers_turn(t_game *game, int dealer_sum, int player_sum);
+void	dealer_win(t_game *game);
+void	player_win(t_game *game);
+void	player_takes(t_game *game);
+void	dealers_turn(t_game *game);
 void	free_cards(t_cards **cards);
 int		update(t_game *game);
 void	init_cards(t_cards	**all_cards, t_game *game);
@@ -107,5 +120,7 @@ void	free_all(t_game *game);
 void	button_bar(t_game *game);
 void	put_card_window(t_game *game, int *img, int x, int y);
 bool	check_input(t_game *game);
-
+void	reset_mouse(t_game *game);
+void	reset_game(t_game *game);
+char	*ft_itoa(int n);
 #endif

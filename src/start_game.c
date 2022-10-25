@@ -1,10 +1,5 @@
 #include "../inc/blackjackmlx.h"
 
-int	dcardx = 50;
-int	dcardy = 50;
-
-bool	onetime = true;
-
 void	play(t_game *game);
 
 void	free_cards(t_cards **cards)
@@ -29,8 +24,7 @@ int	update(t_game *game)
 	bool	input;
 
 	input = check_input(game);
-	button_bar(game);
-	if (onetime)
+	if (game->onetime)
 	{
 		if(game->card_count < 10)
 		{
@@ -38,7 +32,7 @@ int	update(t_game *game)
 			free_cards(&game->cards);
 			init_cards(&game->cards, game);
 			game->card_count = 104;
-			sleep(3);
+			sleep(2);
 		}
 		game->player_is_a = false;
 		game->dealer_is_a = false;
@@ -46,49 +40,66 @@ int	update(t_game *game)
 		game->player_sum = player_first(game);
 		if (dealer_sum == 21)
 		{
-			dealer_win(game, player_sum, dealer_sum);
+			dealer_win(game);
 			return 0;
 		}
 		else if (player_sum == 21)
 		{
-			player_win(game, player_sum, dealer_sum);
+			player_win(game);
 			return 0;
 		}
-		onetime = false;
+		game->onetime = false;
 	}
 	if (input)
 	{
-		
 		play(game);
-		// free_cards(&game->dcards);
-		// free_cards(&game->pcards);
 	}
-	else
-		printf("input yoq\n");
-
+	mlx_clear_window(game->mlx, game->win);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+	mlx_string_put(game->mlx, game->win, game->stats.dcardx + 50, game->stats.dcardy + 70, 0xffffff, ft_itoa(game->dealer_sum));
+	mlx_string_put(game->mlx, game->win, game->stats.pcardx + 50, game->stats.pcardy + 70, 0xffffff, ft_itoa(game->player_sum));
+	// t_cards	*tmp = game->pcards;
+	// while (tmp)
+	// {
+	// 	printf("player cards : %c\n", tmp->name);
+	// 	tmp = tmp->next;
+	// }
+	// tmp = game->dcards;
+	// while (tmp)
+	// {
+	// 	printf("dealer cards : %c\n", tmp->name);
+	// 	tmp = tmp->next;
+	// }
 }
 
 void	play(t_game *game)
 {
-	bool	this_turn = true;
-
-	if (game->game_event == 1)
-		game->player_sum = player_takes(game, game->player_sum , game->dealer_sum, &this_turn);
-	else if (game->game_event == 2)
+	if (game->b_dealerturn)
+		dealers_turn(game);
+	if (game->mouse_e == -1)
+		return ;
+	else if (game->mouse_e == 1)
 	{
-		this_turn = false;
-		dealers_turn(game, game->dealer_sum, game->player_sum);
+		player_takes(game);
+		reset_mouse(game);
 	}
-	else if (game->game_event == 3)
+	else if (game->mouse_e == 2)
+	{
+		// for second card
+		put_card_window(game, game->pcards->next->card_img->addr, 172, 50);
+		game->mouse_e = 31;
+		game->b_dealerturn = true;
+	}
+	else if (game->mouse_e == 3)
 	{
 		free_all(game);
 		exit(0);
 	}
 	if (game->player_sum > 21)
 	{
-			lose++;
 		sleep(1);
-		this_turn = false;
+		reset_game(game);
+		game->stats.lose++;
+		printf("lose\n");
 	}
 }

@@ -41,3 +41,34 @@ void	free_all(t_game *game)
 	free_cards(&game->dcards);
 	mlx_destroy_window(game->mlx, game->win);
 }
+
+void	reset_game(t_game *game)
+{
+	for (int x = 0; x < SCREENW; x++)
+		for (int y = 0; y < 710; y++)
+		{
+			if (y == 375)
+				game->img.addr[y * SCREENW + x] = 0xffffff;
+			else
+				game->img.addr[y * SCREENW + x] = 0;
+		}
+	reset_mouse(game);
+	game->stats.dcardx = 50;
+	game->stats.dcardy = 50;
+	game->stats.pcardx = 50;
+	game->stats.pcardy = 425;
+	game->stats.dealer_sum = 0;
+	game->stats.player_sum = 0;
+	free_cards(&game->pcards);
+	free_cards(&game->dcards);
+	game->dealer_is_a = false;
+	game->player_is_a = false;
+	game->onetime = true;
+}
+
+void	reset_mouse(t_game *game)
+{
+	game->mouse_x = 0;
+	game->mouse_y = 0;
+	game->mouse_e = -1;
+}

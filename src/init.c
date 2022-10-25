@@ -78,6 +78,16 @@ void	init_values(t_game *game)
 	game->mouse_e = 0;
 	game->dealer_is_a = false;
 	game->card_count = 104;
+	game->stats.dcardx = 50;
+	game->stats.dcardy = 50;
+	game->stats.pcardx = 50;
+	game->stats.pcardy = 425;
+	game->stats.dealer_sum = 0;
+	game->stats.player_sum = 0;
+	game->stats.lose = 0;
+	game->stats.win = 0;
+	game->b_dealerturn = false;
+	game->onetime = true;
 	game->mlx = mlx_init();
 }
 
@@ -86,38 +96,44 @@ void	init_images(t_game *game)
 	int a;
 	game->img.img = mlx_new_image(game->mlx, SCREENW, SCREENH);
 	game->img.addr = (int *)mlx_get_data_addr(game->img.img, &a, &a, &a);
+
 	game->buttons.take.img = mlx_xpm_file_to_image(game->mlx, "sprites/take.xpm", &a, &a);
 	game->buttons.stop.img = mlx_xpm_file_to_image(game->mlx, "sprites/stop.xpm", &a, &a);
 	game->buttons.exit.img = mlx_xpm_file_to_image(game->mlx, "sprites/exit.xpm", &a, &a);
+
 	game->buttons.take.addr = (int *)mlx_get_data_addr(game->buttons.take.img, &a, &a, &a);
 	game->buttons.stop.addr = (int *)mlx_get_data_addr(game->buttons.stop.img, &a, &a, &a);
 	game->buttons.exit.addr = (int *)mlx_get_data_addr(game->buttons.exit.img, &a, &a, &a);
+
 	game->c_image._a.img = mlx_xpm_file_to_image(game->mlx, "sprites/1.xpm", &a, &a);
-	game->c_image._a.addr = (int *)mlx_get_data_addr(game->c_image._a.img, &a, &a, &a);
 	game->c_image._2.img = mlx_xpm_file_to_image(game->mlx, "sprites/2.xpm", &a, &a);
-	game->c_image._2.addr = (int *)mlx_get_data_addr(game->c_image._2.img, &a, &a, &a);
 	game->c_image._3.img = mlx_xpm_file_to_image(game->mlx, "sprites/3.xpm", &a, &a);
-	game->c_image._3.addr = (int *)mlx_get_data_addr(game->c_image._3.img, &a, &a, &a);
 	game->c_image._4.img = mlx_xpm_file_to_image(game->mlx, "sprites/4.xpm", &a, &a);
-	game->c_image._4.addr = (int *)mlx_get_data_addr(game->c_image._4.img, &a, &a, &a);
 	game->c_image._5.img = mlx_xpm_file_to_image(game->mlx, "sprites/5.xpm", &a, &a);
-	game->c_image._5.addr = (int *)mlx_get_data_addr(game->c_image._5.img, &a, &a, &a);
 	game->c_image._6.img = mlx_xpm_file_to_image(game->mlx, "sprites/6.xpm", &a, &a);
-	game->c_image._6.addr = (int *)mlx_get_data_addr(game->c_image._6.img, &a, &a, &a);
 	game->c_image._7.img = mlx_xpm_file_to_image(game->mlx, "sprites/7.xpm", &a, &a);
-	game->c_image._7.addr = (int *)mlx_get_data_addr(game->c_image._7.img, &a, &a, &a);
 	game->c_image._8.img = mlx_xpm_file_to_image(game->mlx, "sprites/8.xpm", &a, &a);
-	game->c_image._8.addr = (int *)mlx_get_data_addr(game->c_image._8.img, &a, &a, &a);
 	game->c_image._9.img = mlx_xpm_file_to_image(game->mlx, "sprites/9.xpm", &a, &a);
-	game->c_image._9.addr = (int *)mlx_get_data_addr(game->c_image._9.img, &a, &a, &a);
 	game->c_image._10.img = mlx_xpm_file_to_image(game->mlx, "sprites/10.xpm", &a, &a);
-	game->c_image._10.addr = (int *)mlx_get_data_addr(game->c_image._10.img, &a, &a, &a);
 	game->c_image._q.img = mlx_xpm_file_to_image(game->mlx, "sprites/q.xpm", &a, &a);
-	game->c_image._q.addr = (int *)mlx_get_data_addr(game->c_image._q.img, &a, &a, &a);
 	game->c_image._j.img = mlx_xpm_file_to_image(game->mlx, "sprites/j.xpm", &a, &a);
-	game->c_image._j.addr = (int *)mlx_get_data_addr(game->c_image._j.img, &a, &a, &a);
 	game->c_image._k.img = mlx_xpm_file_to_image(game->mlx, "sprites/k.xpm", &a, &a);
+	game->c_image._back.img = mlx_xpm_file_to_image(game->mlx, "sprites/back.xpm", &a, &a);
+
+	game->c_image._a.addr = (int *)mlx_get_data_addr(game->c_image._a.img, &a, &a, &a);
+	game->c_image._3.addr = (int *)mlx_get_data_addr(game->c_image._3.img, &a, &a, &a);
+	game->c_image._4.addr = (int *)mlx_get_data_addr(game->c_image._4.img, &a, &a, &a);
+	game->c_image._5.addr = (int *)mlx_get_data_addr(game->c_image._5.img, &a, &a, &a);
+	game->c_image._6.addr = (int *)mlx_get_data_addr(game->c_image._6.img, &a, &a, &a);
+	game->c_image._2.addr = (int *)mlx_get_data_addr(game->c_image._2.img, &a, &a, &a);
+	game->c_image._7.addr = (int *)mlx_get_data_addr(game->c_image._7.img, &a, &a, &a);
+	game->c_image._8.addr = (int *)mlx_get_data_addr(game->c_image._8.img, &a, &a, &a);
+	game->c_image._9.addr = (int *)mlx_get_data_addr(game->c_image._9.img, &a, &a, &a);
+	game->c_image._10.addr = (int *)mlx_get_data_addr(game->c_image._10.img, &a, &a, &a);
+	game->c_image._q.addr = (int *)mlx_get_data_addr(game->c_image._q.img, &a, &a, &a);
+	game->c_image._j.addr = (int *)mlx_get_data_addr(game->c_image._j.img, &a, &a, &a);
 	game->c_image._k.addr = (int *)mlx_get_data_addr(game->c_image._k.img, &a, &a, &a);
+	game->c_image._back.addr = (int *)mlx_get_data_addr(game->c_image._back.img, &a, &a, &a);
 }
 
 void	init_all(t_game *game)

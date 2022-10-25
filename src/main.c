@@ -29,5 +29,6 @@ int main(int ac, char **av)
 	mlx_key_hook(game.win, key_events, &game);
 	mlx_loop_hook(game.mlx, update, &game);
 	mlx_mouse_hook(game.win, mouse_events, &game);
+	button_bar(&game);
 	mlx_loop(game.mlx);
 }
